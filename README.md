@@ -86,6 +86,60 @@ This MVP version focuses on delivering core features with a clean, testable, and
 - Swagger or Postman for manual API testing
 
 ---
+## Architecture
+
+/foodtruck-reservation
+├── backend/
+│   └── FoodTruckReservation.API/
+│       ├── Modules/                        # Domain modules
+│       │   ├── Auth/
+|       │   │   ├── Controllers/
+|       │   │   ├── Services/
+|       │   │   ├── Repositories/
+|       │   │   ├── Models/
+|       │   │   ├── DTOs/
+|       │   │   └── AuthModule.cs
+│       │   ├── Reservation/
+│       │   └── Location/
+│       ├── Shared/                         # Mongo, JWT, Middleware, etc.
+│       ├── Config/                         # Global DI / config
+│       ├── Program.cs
+│       └── appsettings.json
+│
+├── frontend/
+│   └── FoodTruckReservation.Frontend/
+│       ├── Pages/
+│       ├── Components/
+│       ├── Services/
+│       ├── Shared/
+│       ├── wwwroot/
+│       ├── Program.cs
+│       └── appsettings.json
+│
+├── tests/
+│   ├── FoodTruckReservation.UnitTests/    # Tests unitaires xUnit
+│   │   ├── Reservation/
+│   │   ├── Auth/
+│   │   └── Location/
+│   │   └── TestUtils/
+│   │
+│   └── FoodTruckReservation.IntegrationTests/
+│       ├── Setup/
+│       └── Reservation/
+│
+├── docker/
+│   ├── mongo-init.js
+│   └── nginx/
+│       └── default.conf
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml                         # Linter / Build / Tests / Docker
+│
+├── docker-compose.yml
+├── .gitignore
+└── README.md
+
 
 ## Suggested Timeline
 
@@ -116,4 +170,4 @@ This MVP version focuses on delivering core features with a clean, testable, and
 
 ---
 
-Made with ☕ & passion for clean code.
+Made with ☕ & passion for clean code !
