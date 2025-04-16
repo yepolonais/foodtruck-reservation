@@ -88,6 +88,7 @@ This MVP version focuses on delivering core features with a clean, testable, and
 ---
 ## Architecture
 
+```text
 /foodtruck-reservation
 ├── backend/
 │   └── FoodTruckReservation.API/
@@ -139,7 +140,7 @@ This MVP version focuses on delivering core features with a clean, testable, and
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md
-
+```
 
 ## Suggested Timeline
 
@@ -170,4 +171,4 @@ This MVP version focuses on delivering core features with a clean, testable, and
 
 ---
 
-Made with ☕ & passion for clean code !
+Let's Go !
