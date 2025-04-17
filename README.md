@@ -1,7 +1,9 @@
 # FoodTruck Reservation – MVP
 
 A web application to book spots for food trucks.  
-Built with C# / ASP.NET Core 8, MongoDB, Blazor, xUnit, Docker, and GitHub Actions.
+Built with C# / ASP.NET Core 8, MongoDB, Blazor, xUnit, Docker, Serilog and GitHub Actions.
+Fluent Validation to validate models in controller.
+Modular Monolith Architecture.
 
 ---
 
