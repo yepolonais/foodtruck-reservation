@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - truckspot_net
+
+  truckspot-api:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: truckspot_api
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: ["/bin/bash", "./entrypoint.sh"]
+    ports:
+      - "5051:5051"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - mongo
+    networks:
+      - truckspot_net
+
+
+volumes:
+  mongo_data:
+    
+networks:
+  truckspot_net:
+    name: truckspot_net
