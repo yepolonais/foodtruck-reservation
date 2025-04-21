@@ -10,4 +10,4 @@ public static class ControllerExtensions
             .AddControllers()
             .AddApplicationPart(Assembly.GetExecutingAssembly());
     }
-}w
+}
