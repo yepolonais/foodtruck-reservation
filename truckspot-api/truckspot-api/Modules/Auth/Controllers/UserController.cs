@@ -10,13 +10,6 @@ namespace truckspot_api.Modules.Auth.Controllers;
 public class UserController: ControllerBase
 {
     private readonly UserRepository _userRepository;
-
-    [HttpGet("ping")]
-    public IActionResult Ping()
-    {
-        return Ok("pong");
-    }
-
     
     public UserController(UserRepository userRepository)
     {
