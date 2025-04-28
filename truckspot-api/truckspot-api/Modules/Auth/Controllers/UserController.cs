@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using truckspot_api.Modules.Auth.DTOs;
 using truckspot_api.Modules.Auth.Models;
 using truckspot_api.Modules.Auth.Repositories;
+using truckspot_api.Modules.Auth.Services;
 
 namespace truckspot_api.Modules.Auth.Controllers;
 
@@ -10,10 +12,12 @@ namespace truckspot_api.Modules.Auth.Controllers;
 public class UserController: ControllerBase
 {
     private readonly UserRepository _userRepository;
+    private readonly AuthService _authService;
     
-    public UserController(UserRepository userRepository)
+    public UserController(UserRepository userRepository, AuthService authService)
     {
         _userRepository = userRepository;
+        _authService = authService;
     }
     
     [HttpGet("{id:length(24)}")]
@@ -41,5 +45,31 @@ public class UserController: ControllerBase
         await _userRepository.CreateAsync(newUser);
         
         return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+    }
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(CreateUser userDto)
+    {
+        var result =
+            await _authService.RegisterAsync(userDto.Email, userDto.Password, userDto.FirstName, userDto.LastName);
+        if (result)
+        {
+            return Ok(new { Message = "User registered successfully" });
+        }
+        return BadRequest(new { Message = "User already exists" });
+    }
+    
+    // Endpoint pour la connexion
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        var user = await _authService.LoginAsync(request.Email, request.Password);
+        if (user == null)
+        {
+            return Unauthorized(new { Message = "Invalid email or password" });
+        }
+
+        // Gérer la génération du token ici (si tu utilises JWT)
+        return Ok(new { Message = "Login successful", User = user });
     }
 }

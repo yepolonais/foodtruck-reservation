@@ -10,7 +10,7 @@ services:
       - truckspot_net
 
   truckspot-api:
-    image: mcr.microsoft.com/dotnet/sdk:9.0
+    image: mcr.microsoft.com/dotnet/sdk:8.0
     container_name: truckspot_api
     volumes:
       - .:/app

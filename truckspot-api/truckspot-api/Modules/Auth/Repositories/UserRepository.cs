@@ -1,7 +1,7 @@
 using MongoDB.Driver;
 using truckspot_api.Config.Database;
 using truckspot_api.Modules.Auth.Models;
-
+using MongoDB.Bson;
 namespace truckspot_api.Modules.Auth.Repositories;
 
 public class UserRepository
@@ -21,7 +21,8 @@ public class UserRepository
 
     public async Task<User?> GetAsync(string id)
     {
-        return await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        var objectId = ObjectId.Parse(id);
+        return await _usersCollection.Find(x => x.Id == objectId).FirstOrDefaultAsync();
     }
 
     public async Task CreateAsync(User newUser)
@@ -31,9 +32,20 @@ public class UserRepository
 
     public async Task UpdateAsync(string id, User updatedUser)
     {
-        await _usersCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
+        var objectId = ObjectId.Parse(id);
+        await _usersCollection.ReplaceOneAsync(x => x.Id == objectId, updatedUser);
     }
 
-    public async Task RemoveAsync(string id) =>
-        await _usersCollection.DeleteOneAsync(x => x.Id == id);
+    public async Task RemoveAsync(string id)
+    {
+        var objectId = ObjectId.Parse(id);
+
+        await _usersCollection.DeleteOneAsync(x => x.Id == objectId);
+    }
+    
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        return await _usersCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
+    }   
+    
 }
