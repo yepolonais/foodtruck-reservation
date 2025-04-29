@@ -2,6 +2,7 @@ using AspNetCore.Identity.Mongo;
 using AspNetCore.Identity.Mongo.Model;
 using truckspot_api.Config.Database;
 using truckspot_api.Modules.Auth.Models;
+using truckspot_api.Modules.Auth.Services;
 
 namespace truckspot_api.Config.Extensions;
 
@@ -25,7 +26,8 @@ public static class ServiceExtensions
         {
             mongo.ConnectionString = "mongodb://mongodb:27017/TruckSpot";
         });
-
+        services.AddScoped<AuthService>();
+        services.AddScoped<TokenService>();
         return services;
     }
 }

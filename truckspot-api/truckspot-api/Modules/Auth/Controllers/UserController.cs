@@ -13,45 +13,27 @@ public class UserController: ControllerBase
 {
     private readonly UserRepository _userRepository;
     private readonly AuthService _authService;
+    private readonly TokenService _tokenService;
     
-    public UserController(UserRepository userRepository, AuthService authService)
+    public UserController(UserRepository userRepository, AuthService authService, TokenService tokenService)
     {
         _userRepository = userRepository;
         _authService = authService;
+        _tokenService = tokenService;
     }
     
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<User>> Get(string id)
     {
         var user = await _userRepository.GetAsync(id);
-
-        if (user is null)
-        {
-            return NotFound();
-        }
-
-        return user;
-    }
-    
-    [HttpPost]
-    public async Task<IActionResult> Post(CreateUser userDto)
-    {
-        var newUser = new User
-        {
-            FirstName = userDto.FirstName,
-            LastName = userDto.LastName,
-        };
         
-        await _userRepository.CreateAsync(newUser);
-        
-        return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+        return user is null ? NotFound() : user;
     }
     
     [HttpPost("register")]
     public async Task<IActionResult> Register(CreateUser userDto)
     {
-        var result =
-            await _authService.RegisterAsync(userDto.Email, userDto.Password, userDto.FirstName, userDto.LastName);
+        var result = await _authService.RegisterAsync(userDto.Email, userDto.Password, userDto.FirstName, userDto.LastName);
         if (result)
         {
             return Ok(new { Message = "User registered successfully" });
@@ -59,7 +41,7 @@ public class UserController: ControllerBase
         return BadRequest(new { Message = "User already exists" });
     }
     
-    // Endpoint pour la connexion
+   
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
@@ -68,8 +50,28 @@ public class UserController: ControllerBase
         {
             return Unauthorized(new { Message = "Invalid email or password" });
         }
+        
+        var (accessToken, refreshToken) = _tokenService.CreateTokens(user);
 
-        // Gérer la génération du token ici (si tu utilises JWT)
-        return Ok(new { Message = "Login successful", User = user });
+        // Stocker le refresh token en bdd
+        
+        var response = new LoginResponseDto
+        {
+            Success = true,
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+        };
+
+        return Ok(response);
+    }
+    
+    [HttpPost("refresh")]
+    public IActionResult Refresh([FromBody] RefreshTokenRequest request)
+    { // à faire stocker le refresh token en base
+        return Ok(new
+        {
+            accessToken = "newAccessToken",
+            message = "Access token refreshed"
+        });
     }
 }
